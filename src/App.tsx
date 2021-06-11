@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { ReactElement, useEffect, useState } from 'react';
+import axios from 'axios';
+import { StarWarsApiEndpoints } from './typings/enums';
+import { VotingTable } from './components/VotingTable/VotingTable';
+import { starwarsApiUrl } from './typings/constants';
+import { LoadingContainer } from './components/LoadingContainer/LoadingContainer';
+import { ErrorContainer } from './components/ErrorContainer/ErrorContainer';
+import { IStarWarsApiDataDto } from './typings/types';
+import { getFilmTitleAndReleaseDate } from './services/DataTransformationService/DataTransformationService';
 
-function App() {
+export default function App(): ReactElement {
+  const [starWarsData, setStarWarsData] =
+    useState<IStarWarsApiDataDto | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!starWarsData) {
+      setIsLoading(true);
+      axios
+        .get(starwarsApiUrl + StarWarsApiEndpoints.films)
+        .then((res) => {
+          setStarWarsData(res.data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setIsError(true);
+          setIsLoading(false);
+        });
+    }
+  }, [starWarsData]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div>
+        <h1>List of Star Wars Films</h1>
+      </div>
+      <div>
+        {isLoading && (
+          <LoadingContainer message={'Loading Star Wars films...'} />
+        )}
+        {isError && (
+          <ErrorContainer
+            message={
+              'Error retrieving Star Wars films, please reload to try again'
+            }
+          />
+        )}
+        {!isError && !isLoading && starWarsData && (
+          <>
+            <p>Vote for your favourite Star Wars film</p>
+            <VotingTable
+              starWarsData={getFilmTitleAndReleaseDate(starWarsData.results)}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 }
-
-export default App;
