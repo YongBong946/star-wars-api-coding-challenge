@@ -7,6 +7,7 @@ import { LoadingContainer } from './components/LoadingContainer/LoadingContainer
 import { ErrorContainer } from './components/ErrorContainer/ErrorContainer';
 import { IStarWarsApiDataDto } from './typings/types';
 import { getFilmTitleAndReleaseDate } from './services/DataTransformationService/DataTransformationService';
+import { StyledHeaderContainer, StyledBodyContainer } from './App.style';
 
 export default function App(): ReactElement {
   const [starWarsData, setStarWarsData] =
@@ -32,29 +33,27 @@ export default function App(): ReactElement {
 
   return (
     <div>
-      <div>
+      <StyledHeaderContainer>
         <h1>List of Star Wars Films</h1>
-      </div>
-      <div>
+      </StyledHeaderContainer>
+      <StyledBodyContainer>
         {isLoading && (
           <LoadingContainer message={'Loading Star Wars films...'} />
         )}
         {isError && (
           <ErrorContainer
             message={
-              'Error retrieving Star Wars films, please reload to try again'
+              'Error retrieving Star Wars films. Please reload to try again.'
             }
           />
         )}
         {!isError && !isLoading && starWarsData && (
-          <>
-            <p>Vote for your favourite Star Wars film</p>
-            <VotingTable
-              starWarsData={getFilmTitleAndReleaseDate(starWarsData.results)}
-            />
-          </>
+          <VotingTable
+            starWarsData={getFilmTitleAndReleaseDate(starWarsData.results)}
+            tableTitle='Vote for your favourite Star Wars film'
+          />
         )}
-      </div>
+      </StyledBodyContainer>
     </div>
   );
 }

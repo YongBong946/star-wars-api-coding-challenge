@@ -4,8 +4,8 @@ import { ErrorContainer } from './ErrorContainer';
 const mockProps = { message: 'test message' };
 
 describe('ErrorContainer', () => {
-  test('renders the ErrorContainer with the message supplied by the props', async () => {
-    const { getByTestId } = render(<ErrorContainer {...mockProps} />);
-    expect(getByTestId('error-container')).toHaveTextContent(mockProps.message);
+  test('renders the ErrorContainer with the message supplied by the props', () => {
+    const { getByRole } = render(<ErrorContainer {...mockProps} />);
+    expect(getByRole('alert')).toHaveTextContent(mockProps.message);
   });
 });

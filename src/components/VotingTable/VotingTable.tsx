@@ -2,15 +2,22 @@ import React, { useState } from 'react';
 import { VotingNumber } from '../../typings/enums';
 import { formatDate } from '../../services/DataTransformationService/DataTransformationService';
 import { IStarWarsFilmData } from '../../typings/types';
+import {
+  StyledTable,
+  StyledTd,
+  StyledTh,
+  StyledVotingTableContainer
+} from './VotingTable.style';
 
 export interface VotingTableProps {
   starWarsData: IStarWarsFilmData[];
+  tableTitle: string;
 }
 
 export const VotingTable: React.FunctionComponent<VotingTableProps> = (
   props
 ) => {
-  const { starWarsData } = props;
+  const { starWarsData, tableTitle } = props;
   const [votingTableData, setVotingTableData] =
     useState<IStarWarsFilmData[]>(starWarsData);
   const [totalVotes, setTotalVotes] = useState<number>(0);
@@ -28,55 +35,60 @@ export const VotingTable: React.FunctionComponent<VotingTableProps> = (
   };
 
   return (
-    <table data-testid='voting-table'>
-      <thead>
-        <tr>
-          <th>Star Wars Film</th>
-          <th>Release Date</th>
-          <th>Votes</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {votingTableData.map((votingRow, index) => {
-          const { title, releaseDate, votes } = votingRow;
-          return (
-            <tr key={index}>
-              <td data-testid='film-title'>{title}</td>
-              <td data-testid='film-release-date'>{formatDate(releaseDate)}</td>
-              <td data-testid='film-vote-counter'>{votes}</td>
-              <td>
-                <button
-                  data-testid='film-upvote-button'
-                  onClick={() =>
-                    voteClickHandler(votes, VotingNumber.upvote, index)
-                  }
-                >
-                  Upvote
-                </button>
-                <button
-                  data-testid='film-downvote-button'
-                  onClick={() =>
-                    voteClickHandler(votes, VotingNumber.downvote, index)
-                  }
-                >
-                  Downvote
-                </button>
-              </td>
-            </tr>
-          );
-        })}
-        <tr>
-          <td></td>
-          <td>
-            <strong>Total Votes</strong>
-          </td>
-          <td>
-            <strong data-testid='total-votes-counter'>{totalVotes}</strong>
-          </td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
+    <StyledVotingTableContainer>
+      <h3 id='table-title'>{tableTitle}</h3>
+      <StyledTable>
+        <thead>
+          <tr>
+            <StyledTh>Star Wars Film</StyledTh>
+            <StyledTh>Release Date</StyledTh>
+            <StyledTh>Votes</StyledTh>
+            <StyledTh></StyledTh>
+          </tr>
+        </thead>
+        <tbody>
+          {votingTableData.map((votingRow, index) => {
+            const { title, releaseDate, votes } = votingRow;
+            return (
+              <tr key={index}>
+                <StyledTd id='film-title'>{title}</StyledTd>
+                <StyledTd id='film-release-date'>
+                  {formatDate(releaseDate)}
+                </StyledTd>
+                <StyledTd id='film-vote-counter'>{votes}</StyledTd>
+                <StyledTd>
+                  <button
+                    id='film-upvote-button'
+                    onClick={() =>
+                      voteClickHandler(votes, VotingNumber.upvote, index)
+                    }
+                  >
+                    Upvote
+                  </button>
+                  <button
+                    id='film-downvote-button'
+                    onClick={() =>
+                      voteClickHandler(votes, VotingNumber.downvote, index)
+                    }
+                  >
+                    Downvote
+                  </button>
+                </StyledTd>
+              </tr>
+            );
+          })}
+          <tr>
+            <td></td>
+            <StyledTd>
+              <strong>Total Votes</strong>
+            </StyledTd>
+            <StyledTd>
+              <strong id='total-votes-counter'>{totalVotes}</strong>
+            </StyledTd>
+            <td></td>
+          </tr>
+        </tbody>
+      </StyledTable>
+    </StyledVotingTableContainer>
   );
 };
