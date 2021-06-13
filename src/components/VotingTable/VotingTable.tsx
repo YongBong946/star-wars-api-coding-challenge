@@ -50,7 +50,7 @@ export const VotingTable: React.FunctionComponent<VotingTableProps> = (
           {votingTableData.map((votingRow, index) => {
             const { title, releaseDate, votes } = votingRow;
             return (
-              <tr key={index}>
+              <tr key={`${title}-${releaseDate}`}>
                 <StyledTd id='film-title'>{title}</StyledTd>
                 <StyledTd id='film-release-date'>
                   {formatDate(releaseDate)}
@@ -78,14 +78,14 @@ export const VotingTable: React.FunctionComponent<VotingTableProps> = (
             );
           })}
           <tr>
-            <td></td>
+            <StyledTd></StyledTd>
             <StyledTd>
               <strong>Total Votes</strong>
             </StyledTd>
             <StyledTd>
               <strong id='total-votes-counter'>{totalVotes}</strong>
             </StyledTd>
-            <td></td>
+            <StyledTd></StyledTd>
           </tr>
         </tbody>
       </StyledTable>

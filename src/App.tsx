@@ -24,7 +24,7 @@ export default function App(): ReactElement {
           setStarWarsData(res.data);
           setIsLoading(false);
         })
-        .catch((error) => {
+        .catch(() => {
           setIsError(true);
           setIsLoading(false);
         });
